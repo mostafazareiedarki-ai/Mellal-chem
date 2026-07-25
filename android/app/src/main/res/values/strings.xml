@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Mwellal Chem</string>
-    <string name="title_activity_main">Mwellal Chem</string>
+    <string name="app_name">Mellal Chem</string>
+    <string name="title_activity_main">Mellal Chem</string>
     <string name="package_name">com.mellalchem.app</string>
     <string name="custom_url_scheme">com.mellalchem.app</string>
 </resources>
