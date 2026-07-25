@@ -11,8 +11,19 @@
     "android": "npx cap open android"
   },
   "dependencies": {
-    "@capacitor/android": "^7.4.2",
-    "@capacitor/cli": "^7.4.2",
-    "@capacitor/core": "^7.4.2"
-  }
+    "@capacitor/android": "^7.6.8",
+    "@capacitor/cli": "^7.6.8",
+    "@capacitor/core": "^7.6.8"
+  },
+  "main": "sw.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mostafazareiedarki-ai/Mellal-chem.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mostafazareiedarki-ai/Mellal-chem/issues"
+  },
+  "homepage": "https://github.com/mostafazareiedarki-ai/Mellal-chem#readme"
 }
