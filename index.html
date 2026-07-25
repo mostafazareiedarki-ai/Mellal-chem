@@ -32,11 +32,13 @@
   --radius:16px;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{height:100%;}
+html,body{height:100%; min-height:100vh; min-height:100dvh;}
 body{
   margin:0; background:var(--bg); color:var(--text);
   font-family:'BNazanin','Segoe UI',Tahoma,Arial,sans-serif;
   overscroll-behavior:none; user-select:none;
+  padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+  padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right);
 }
 h1,h2,h3,
 .card-title, .tile span, .result-title, .about-card h2,
@@ -47,19 +49,17 @@ button, .fab, .lock-btn, select, .modal h3, .topbar h1, .home-hero h2,
 }
 input,textarea{user-select:text;}
 #app{
-    width:100%;
-    max-width:100%;
-    min-height:100dvh;
-    margin:0;
-    padding:16px;
-    box-sizing:border-box;
+  width:100%; max-width:480px; margin:0 auto;
+  min-height:100vh; min-height:100dvh;
+  display:flex; flex-direction:column; position:relative; background:var(--bg);
+  box-sizing:border-box; overflow-x:hidden;
 }
 
 /* ---------- Splash ---------- */
 #splash{
   position:fixed; inset:0; background:#eef2f7; z-index:999;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transition:opacity .5s ease;
+  transition:opacity .5s ease; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 #splash img{width:150px; height:150px; border-radius:28px; box-shadow:0 10px 30px rgba(20,40,70,.25);}
 #splash h1{color:#12233d; font-size:20px; margin:18px 0 2px;}
@@ -71,7 +71,8 @@ input,textarea{user-select:text;}
 /* ---------- Lock screen ---------- */
 #lock{
   position:fixed; inset:0; background:var(--bg); z-index:900;
-  display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px;
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:calc(24px + env(safe-area-inset-top)) calc(24px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(24px + env(safe-area-inset-left));
 }
 #lock.show{display:flex;}
 #lock img{width:72px; height:72px; border-radius:18px; margin-bottom:14px;}
@@ -84,7 +85,7 @@ input,textarea{user-select:text;}
   border:1px solid #2a415f; background:var(--card); color:var(--text); margin-bottom:12px;
 }
 .pattern-grid{display:grid; grid-template-columns:repeat(3,60px); grid-gap:22px; margin:10px 0 18px;}
-.pattern-dot{width:22px; height:22px; border-radius:50%; border:2px solid #4a6padding:0; border-color:#4a6787; background:transparent; position:relative;}
+.pattern-dot{width:22px; height:22px; border-radius:50%; border:2px solid #4a6787; background:transparent; position:relative;}
 .pattern-dot.active{background:var(--gold); border-color:var(--gold);}
 .lock-btn{background:var(--gold); color:#1a1200; border:none; padding:11px 26px; border-radius:12px; font-size:14px; font-weight:700;}
 .lock-err{color:var(--danger); font-size:12px; height:16px; margin-top:6px;}
@@ -92,15 +93,17 @@ input,textarea{user-select:text;}
 
 /* ---------- Top bar ---------- */
 .topbar{
-  display:flex; align-items:center; justify-content:space-between; padding:16px 18px 10px;
-  background:var(--bg);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:calc(16px + env(safe-area-inset-top)) 18px 10px;
+  background:var(--bg); position:sticky; top:0; z-index:20;
 }
 .topbar h1{font-size:16px; margin:0; font-weight:700;}
 .backBtn{background:var(--card); border:none; color:var(--gold-2); width:36px; height:36px; border-radius:10px; font-size:16px;}
 
 /* ---------- Screens ---------- */
-.screen{display:none; flex:1; flex-direction:column; padding:0 16px 90px; overflow-y:auto;}
-.screen.active{display:flex;}
+.screen{display:none; flex:1; flex-direction:column; padding:0 16px calc(150px + env(safe-area-inset-bottom)); overflow-y:auto;}
+.screen.active{display:flex; animation:fadeIn .22s ease;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
 
 /* Home */
 .home-hero{display:flex; flex-direction:column; align-items:center; padding:18px 0 8px;}
@@ -129,12 +132,34 @@ input,textarea{user-select:text;}
 .icon-btn.danger{color:var(--danger);}
 .icon-btn.edit{color:var(--gold-2);}
 
-.fab{
-  position:fixed; bottom:22px; left:50%; transform:translateX(-50%); max-width:448px; width:calc(100% - 32px);
-  background:var(--gold); color:#1a1200; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px;
-  box-shadow:0 8px 20px rgba(212,175,55,.35); z-index:5;
+/* Bottom Navigation */
+.bottomnav{
+  position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto;
+  background:var(--card); border-top:1px solid #223b5c; display:none;
+  justify-content:space-around; padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  z-index:50;
 }
+.bottomnav.show{display:flex;}
+.bottomnav .nb{display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--text-dim); font-size:11px; background:none; border:none; padding:5px 10px; border-radius:10px; transition:.15s;}
+.bottomnav .nb .nbicon{font-size:19px;}
+.bottomnav .nb.active{color:var(--gold-2); background:rgba(212,175,55,.12);}
+.bottomnav .nb:active{transform:scale(.92);}
+
+/* Material-ish press feedback */
+.tile{transition:transform .12s ease, box-shadow .12s ease; box-shadow:0 3px 10px rgba(0,0,0,.18);}
+.tile:active{transform:scale(.95); box-shadow:0 1px 4px rgba(0,0,0,.15);}
+.card{transition:box-shadow .15s ease; box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.icon-btn, .about-btn, .lock-btn, .lock-fp{transition:transform .12s ease;}
+.icon-btn:active, .about-btn:active, .lock-btn:active{transform:scale(.93);}
+.fab{
+  position:fixed; left:0; right:0; margin:0 auto; max-width:448px; width:calc(100% - 32px);
+  bottom:calc(78px + env(safe-area-inset-bottom));
+  background:var(--gold); color:#1a1200; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px;
+  box-shadow:0 8px 20px rgba(212,175,55,.35); z-index:5; transition:transform .12s ease, box-shadow .12s ease;
+}
+.fab:active{transform:scale(.97); box-shadow:0 4px 10px rgba(212,175,55,.3);}
 .fab.secondary{position:static; box-shadow:none; width:100%; margin-top:6px; background:var(--card-2); color:var(--gold-2); border:1px solid var(--gold);}
+.fab.secondary:active{transform:scale(.97);}
 
 /* Forms */
 label{font-size:12px; color:var(--text-dim); display:block; margin:12px 0 5px;}
@@ -188,57 +213,6 @@ input:checked + .slider:before{transform:translateX(-20px);}
 .dev-photo-ph{width:60px; height:60px; border-radius:50%; background:var(--card-2); margin:0 auto 8px; display:flex; align-items:center; justify-content:center; font-size:22px;}
 .toast{position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#1c2f4a; color:var(--text); padding:11px 18px; border-radius:12px; font-size:13px; z-index:500; opacity:0; transition:.25s; pointer-events:none;}
 .toast.show{opacity:1;}
-  *{
-    box-sizing:border-box;
-}
-
-img{
-    max-width:100%;
-    height:auto;
-}
-
-button,
-input,
-select,
-textarea{
-    width:100%;
-    max-width:100%;
-}
-
-.row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-.row>*{
-    flex:1 1 220px;
-}
-
-.card{
-    width:100%;
-}
-
-table{
-    display:block;
-    overflow-x:auto;
-}
-
-@media (max-width:600px){
-
-    body{
-        font-size:15px;
-    }
-
-    h1,h2,h3{
-        font-size:1.1rem;
-    }
-
-    button{
-        min-height:48px;
-        font-size:15px;
-    }
-}
 </style>
 </head>
 <body>
@@ -400,8 +374,8 @@ table{
           <div class="pattern-grid" id="setPatternGrid" style="margin:14px auto;"></div>
           <div class="hint" id="setPatternHint">الگوی جدید را رسم کنید</div>
         </div>
-        <div class="toggle-row" style="border-top:1px solid #223b5c; margin-top:10px;">
-          <span>ورود با اثر انگشت (در صورت پشتیبانی گوشی)</span>
+        <div class="toggle-row" id="fpRow" style="border-top:1px solid #223b5c; margin-top:10px;">
+          <span>ورود با اثر انگشت</span>
           <label class="switch"><input type="checkbox" id="fpEnabled" onchange="toggleFingerprint()"><span class="slider"></span></label>
         </div>
       </div>
@@ -428,6 +402,13 @@ table{
     <div class="hint" style="text-align:center; margin-top:6px;">تمامی حقوق محفوظ است © ۱۴۰۵</div>
   </div>
 
+</div>
+
+<div class="bottomnav" id="bottomNav">
+  <button class="nb" data-t="home" onclick="nav('home')"><span class="nbicon">🏠</span>خانه</button>
+  <button class="nb" data-t="formulas" onclick="nav('formulas')"><span class="nbicon">📋</span>فرمول‌ها</button>
+  <button class="nb" data-t="produce" onclick="nav('produce')"><span class="nbicon">⚗️</span>تولید</button>
+  <button class="nb" data-t="settings" onclick="nav('settings')"><span class="nbicon">⚙️</span>تنظیمات</button>
 </div>
 
 <!-- MATERIAL MODAL -->
@@ -484,13 +465,13 @@ let DB = {
   groups: dbGet('groups', ['عمومی']),
   formulas: dbGet('formulas', []),
   history: dbGet('history', []),
-  settings: dbGet('settings', {securityEnabled:false, method:'pass', passHash:'', patternHash:'', fingerprint:false})
+  settings: dbGet('settings', {securityEnabled:false, method:'pass', passHash:'', patternHash:'', fingerprint:false, fpCredId:''})
 };
 function saveDB(part){ dbSet(part, DB[part]); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function fmt(n){ return Number(n||0).toLocaleString('fa-IR', {maximumFractionDigits:2}); }
-function fmtKg(n){ return Number(n||0).toLocaleString('fa-IR', {minimumFractionDigits:3, maximumFractionDigits:3}); }
+function fmtKg(n){ return Number(n||0).toLocaleString('fa-IR', {maximumFractionDigits:3}); }
 function simpleHash(str){ let h=0; for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;} return h.toString(36); }
 
 /* ============ SPLASH ============ */
@@ -510,6 +491,7 @@ window.addEventListener('load', ()=>{
 
 function startApp(){
   document.getElementById('topbar').style.display='flex';
+  document.getElementById('bottomNav').classList.add('show');
   if(DB.settings.securityEnabled){ showLock(); } else { nav('home', true); }
 }
 
@@ -527,7 +509,7 @@ function showLock(){
     document.getElementById('lockPassMode').style.display='block';
     document.getElementById('lockPatternMode').style.display='none';
   }
-  document.getElementById('lockFpBtn').style.display = DB.settings.fingerprint ? 'block':'none';
+  document.getElementById('lockFpBtn').style.display = (DB.settings.fingerprint && DB.settings.fpCredId) ? 'block':'none';
 }
 function tryPassUnlock(){
   const v=document.getElementById('lockPassInput').value;
@@ -573,16 +555,40 @@ function unlockOk(){
   document.getElementById('lockErr').textContent='';
   nav('home', true);
 }
+function bufToBase64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function base64ToBuf(b64){ const bin=atob(b64); const arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i); return arr; }
+
+async function registerFingerprint(){
+  if(!window.PublicKeyCredential){ toast('این دستگاه از اثر انگشت پشتیبانی نمی‌کند'); return false; }
+  try{
+    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if(!available){ toast('حسگر اثر انگشت روی این دستگاه در دسترس نیست'); return false; }
+    const cred = await navigator.credentials.create({publicKey:{
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      rp:{ name:'Mellal Chem' },
+      user:{ id: crypto.getRandomValues(new Uint8Array(16)), name:'mellalchem-user', displayName:'کاربر' },
+      pubKeyCredParams:[{type:'public-key', alg:-7}, {type:'public-key', alg:-257}],
+      authenticatorSelection:{ authenticatorAttachment:'platform', userVerification:'required' },
+      timeout:60000
+    }});
+    DB.settings.fpCredId = bufToBase64(cred.rawId);
+    DB.settings.fingerprint = true;
+    saveDB('settings');
+    toast('اثر انگشت با موفقیت ثبت شد');
+    return true;
+  }catch(e){ toast('ثبت اثر انگشت ناموفق بود'); return false; }
+}
 async function tryFingerprint(){
-  if(!window.PublicKeyCredential){ toast('این دستگاه از اثر انگشت پشتیبانی نمی‌کند'); return; }
+  if(!window.PublicKeyCredential || !DB.settings.fpCredId){ toast('اثر انگشت ثبت نشده — از تنظیمات وارد کنید'); return; }
   try{
     await navigator.credentials.get({publicKey:{
-      challenge: new Uint8Array(32),
-      timeout:60000,
-      userVerification:'required'
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      allowCredentials:[{ id: base64ToBuf(DB.settings.fpCredId), type:'public-key' }],
+      userVerification:'required',
+      timeout:60000
     }});
     unlockOk();
-  }catch(e){ toast('احراز هویت اثر انگشت ناموفق بود؛ رمز عبور را وارد کنید'); }
+  }catch(e){ toast('احراز هویت اثر انگشت ناموفق بود؛ رمز عبور یا الگو را وارد کنید'); }
 }
 
 /* ============ NAV ============ */
@@ -595,6 +601,9 @@ function nav(name, isHome){
   document.getElementById('screen-'+name).classList.add('active');
   document.getElementById('screenTitle').textContent=TITLES[name]||'Mellal Chem';
   document.getElementById('backBtn').style.display = (name==='home')?'none':'flex';
+  const navTabFor = {home:'home', formulas:'formulas', formulaEditor:'formulas', produce:'produce', settings:'settings'};
+  const activeTab = navTabFor[name];
+  document.querySelectorAll('.bottomnav .nb').forEach(b=>b.classList.toggle('active', b.dataset.t===activeTab));
   if(name==='materials') renderMaterials();
   if(name==='costs') renderCosts();
   if(name==='formulas') renderFormulas();
@@ -959,6 +968,13 @@ function renderSettings(){
   document.getElementById('secMethod').value = DB.settings.method;
   document.getElementById('fpEnabled').checked = DB.settings.fingerprint;
   renderSecMethod();
+  checkFingerprintSupport();
+}
+async function checkFingerprintSupport(){
+  const row=document.getElementById('fpRow');
+  let supported=false;
+  try{ supported = !!(window.PublicKeyCredential && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }catch(e){}
+  row.style.display = supported ? 'flex' : 'none';
 }
 function toggleSecurity(){
   DB.settings.securityEnabled = document.getElementById('secEnabled').checked;
@@ -986,11 +1002,12 @@ function setPassword(){
 }
 async function toggleFingerprint(){
   const on=document.getElementById('fpEnabled').checked;
-  if(on && !window.PublicKeyCredential){
-    toast('این دستگاه از اثر انگشت پشتیبانی نمی‌کند');
-    document.getElementById('fpEnabled').checked=false; return;
+  if(on){
+    const ok = await registerFingerprint();
+    if(!ok){ document.getElementById('fpEnabled').checked=false; DB.settings.fingerprint=false; saveDB('settings'); }
+  } else {
+    DB.settings.fingerprint=false; DB.settings.fpCredId=''; saveDB('settings');
   }
-  DB.settings.fingerprint=on; saveDB('settings');
 }
 
 /* ============ MODAL HELPER ============ */
