@@ -46,7 +46,14 @@ button, .fab, .lock-btn, select, .modal h3, .topbar h1, .home-hero h2,
   font-family:'BTitr','BNazanin',Tahoma,Arial,sans-serif;
 }
 input,textarea{user-select:text;}
-#app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative; background:var(--bg);}
+#app{
+    width:100%;
+    max-width:100%;
+    min-height:100dvh;
+    margin:0;
+    padding:16px;
+    box-sizing:border-box;
+}
 
 /* ---------- Splash ---------- */
 #splash{
@@ -181,6 +188,57 @@ input:checked + .slider:before{transform:translateX(-20px);}
 .dev-photo-ph{width:60px; height:60px; border-radius:50%; background:var(--card-2); margin:0 auto 8px; display:flex; align-items:center; justify-content:center; font-size:22px;}
 .toast{position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#1c2f4a; color:var(--text); padding:11px 18px; border-radius:12px; font-size:13px; z-index:500; opacity:0; transition:.25s; pointer-events:none;}
 .toast.show{opacity:1;}
+  *{
+    box-sizing:border-box;
+}
+
+img{
+    max-width:100%;
+    height:auto;
+}
+
+button,
+input,
+select,
+textarea{
+    width:100%;
+    max-width:100%;
+}
+
+.row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.row>*{
+    flex:1 1 220px;
+}
+
+.card{
+    width:100%;
+}
+
+table{
+    display:block;
+    overflow-x:auto;
+}
+
+@media (max-width:600px){
+
+    body{
+        font-size:15px;
+    }
+
+    h1,h2,h3{
+        font-size:1.1rem;
+    }
+
+    button{
+        min-height:48px;
+        font-size:15px;
+    }
+}
 </style>
 </head>
 <body>
