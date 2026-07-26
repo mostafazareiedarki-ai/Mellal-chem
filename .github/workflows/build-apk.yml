@@ -26,6 +26,9 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
+      - name: Remove any previous Android project (keeps this step repeatable)
+        run: rm -rf android
+
       - name: Add Android platform
         run: npx cap add android
 
