@@ -23,13 +23,17 @@
   --bg-2:#0f2136;
   --card:#152944;
   --card-2:#1b3252;
-  --gold:#d4af37;
-  --gold-2:#e9c968;
+  --gold:#c9703f;
+  --gold-2:#e8955f;
   --text:#f2ede2;
   --text-dim:#a9b7cc;
   --danger:#e0555a;
   --good:#4caf78;
   --radius:16px;
+  --e1:0 1px 3px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+  --e2:0 4px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  --e3:0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+  --e-press:inset 0 2px 6px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html,body{height:100%; min-height:100vh; min-height:100dvh;}
@@ -51,7 +55,8 @@ input,textarea{user-select:text;}
 #app{
   width:100%; max-width:480px; margin:0 auto;
   min-height:100vh; min-height:100dvh;
-  display:flex; flex-direction:column; position:relative; background:var(--bg);
+  display:flex; flex-direction:column; position:relative;
+  background:radial-gradient(120% 60% at 50% -10%, #16294a 0%, var(--bg) 55%);
   box-sizing:border-box; overflow-x:hidden;
 }
 
@@ -110,24 +115,35 @@ input,textarea{user-select:text;}
 .home-hero img{width:64px; height:64px; border-radius:16px; margin-bottom:8px;}
 .home-hero h2{margin:0; font-size:17px;}
 .home-hero span{color:var(--text-dim); font-size:11px;}
-.grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
 .tile{
-  background:var(--card); border-radius:var(--radius); padding:18px 10px; text-align:center;
-  border:1px solid #223b5c; display:flex; flex-direction:column; align-items:center; gap:8px;
+  background:linear-gradient(160deg, var(--card-2), var(--card));
+  border-radius:18px; padding:22px 10px; text-align:center;
+  border:1px solid rgba(255,255,255,.06);
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  box-shadow:var(--e2); transition:transform .12s ease, box-shadow .12s ease;
 }
-.tile .ic{font-size:26px;}
-.tile span{font-size:13px; color:var(--text);}
+.tile:active{transform:scale(.96); box-shadow:var(--e-press);}
+.tile .ic{
+  width:64px; height:64px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg,#20385a,#12233d);
+  box-shadow:0 3px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.tile .ic svg{width:38px; height:38px;}
+.tile span{font-size:13.5px; color:var(--text); font-weight:700;}
 .about-btn{
-  margin-top:14px; background:var(--card-2); border:1px solid var(--gold); color:var(--gold-2);
-  padding:13px; border-radius:14px; text-align:center; font-size:14px;
+  margin-top:14px; background:linear-gradient(160deg, var(--gold-2), var(--gold)); border:none; color:#fff;
+  padding:15px; border-radius:30px; text-align:center; font-size:14px; font-weight:700;
+  box-shadow:0 8px 20px rgba(201,112,63,.35), inset 0 1px 0 rgba(255,255,255,.3); transition:transform .12s ease, box-shadow .12s ease;
 }
+.about-btn:active{transform:scale(.97); box-shadow:var(--e-press);}
 
 /* Generic list/card */
-.card{background:var(--card); border:1px solid #223b5c; border-radius:14px; padding:14px; margin-bottom:12px;}
+.card{background:linear-gradient(160deg, var(--card-2), var(--card)); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:14px; margin-bottom:12px; box-shadow:var(--e1);}
 .card-row{display:flex; justify-content:space-between; align-items:center;}
 .card-title{font-size:14px; font-weight:700;}
 .card-sub{font-size:12px; color:var(--text-dim); margin-top:3px;}
-.pill{background:#243e60; color:var(--gold-2); font-size:11px; padding:3px 9px; border-radius:20px;}
+.pill{background:linear-gradient(160deg,#2d4a70,#1c3454); color:var(--gold-2); font-size:11px; padding:4px 11px; border-radius:20px; box-shadow:var(--e1); border:1px solid rgba(255,255,255,.08);}
 .icon-btn{background:transparent; border:none; color:var(--text-dim); font-size:16px; padding:4px 6px;}
 .icon-btn.danger{color:var(--danger);}
 .icon-btn.edit{color:var(--gold-2);}
@@ -146,31 +162,34 @@ input,textarea{user-select:text;}
 .bottomnav .nb:active{transform:scale(.92);}
 
 /* Material-ish press feedback */
-.tile{transition:transform .12s ease, box-shadow .12s ease; box-shadow:0 3px 10px rgba(0,0,0,.18);}
-.tile:active{transform:scale(.95); box-shadow:0 1px 4px rgba(0,0,0,.15);}
-.card{transition:box-shadow .15s ease; box-shadow:0 2px 8px rgba(0,0,0,.15);}
-.icon-btn, .about-btn, .lock-btn, .lock-fp{transition:transform .12s ease;}
-.icon-btn:active, .about-btn:active, .lock-btn:active{transform:scale(.93);}
+.card{transition:box-shadow .15s ease; box-shadow:var(--e1);}
+.icon-btn, .lock-btn, .lock-fp{transition:transform .12s ease;}
+.icon-btn:active, .lock-btn:active{transform:scale(.93);}
 .fab{
   position:fixed; left:0; right:0; margin:0 auto; max-width:448px; width:calc(100% - 32px);
   bottom:calc(78px + env(safe-area-inset-bottom));
-  background:var(--gold); color:#1a1200; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px;
-  box-shadow:0 8px 20px rgba(212,175,55,.35); z-index:5; transition:transform .12s ease, box-shadow .12s ease;
+  background:linear-gradient(160deg, var(--gold-2), var(--gold)); color:#1a1200; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px;
+  box-shadow:0 8px 20px rgba(212,175,55,.35), inset 0 1px 0 rgba(255,255,255,.35); z-index:5; transition:transform .12s ease, box-shadow .12s ease;
 }
-.fab:active{transform:scale(.97); box-shadow:0 4px 10px rgba(212,175,55,.3);}
-.fab.secondary{position:static; box-shadow:none; width:100%; margin-top:6px; background:var(--card-2); color:var(--gold-2); border:1px solid var(--gold);}
-.fab.secondary:active{transform:scale(.97);}
+.fab:active{transform:scale(.97); box-shadow:var(--e-press);}
+.fab.secondary{position:static; box-shadow:var(--e1); width:100%; margin-top:6px; background:linear-gradient(160deg, var(--card-2), var(--card)); color:var(--gold-2); border:1px solid var(--gold);}
+.fab.secondary:active{transform:scale(.97); box-shadow:var(--e-press);}
 
 /* Forms */
 label{font-size:12px; color:var(--text-dim); display:block; margin:12px 0 5px;}
 input[type=text],input[type=number],input[type=tel],input[type=password],select,textarea{
   width:100%; padding:12px; border-radius:12px; border:1px solid #2a415f; background:var(--card-2); color:var(--text); font-size:14px; font-family:inherit;
+  box-shadow:var(--e-press); transition:border-color .15s ease, box-shadow .15s ease;
 }
+input:focus, select:focus, textarea:focus{
+  outline:none; border-color:var(--gold); box-shadow:var(--e-press), 0 0 0 3px rgba(212,175,55,.18);
+}
+input.input-error{border-color:var(--danger); box-shadow:var(--e-press), 0 0 0 3px rgba(224,85,90,.18);}
 select{appearance:none;}
-.form-box{background:var(--card); border:1px solid #223b5c; border-radius:14px; padding:14px; margin-top:14px;}
+.form-box{background:linear-gradient(160deg, var(--card-2), var(--card)); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:14px; margin-top:14px; box-shadow:var(--e1);}
 .row2{display:flex; gap:10px;}
 .row2 > div{flex:1;}
-.matline{display:flex; gap:8px; align-items:center; background:var(--card-2); padding:8px 10px; border-radius:10px; margin-bottom:8px;}
+.matline{display:flex; gap:8px; align-items:center; background:var(--card-2); padding:8px 10px; border-radius:10px; margin-bottom:8px; box-shadow:var(--e-press);}
 .matline .mname{flex:1; font-size:13px;}
 .matline input{width:80px; padding:8px; font-size:13px;}
 .sum-box{display:flex; justify-content:space-between; font-size:13px; margin-top:10px; padding-top:10px; border-top:1px dashed #2a415f;}
@@ -180,17 +199,18 @@ select{appearance:none;}
 .toggle-row{display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid #223b5c;}
 .switch{position:relative; width:46px; height:26px;}
 .switch input{opacity:0; width:0; height:0;}
-.slider{position:absolute; inset:0; background:#2a415f; border-radius:20px; transition:.2s; cursor:pointer;}
-.slider:before{content:""; position:absolute; width:20px; height:20px; right:3px; top:3px; background:#fff; border-radius:50%; transition:.2s;}
-input:checked + .slider{background:var(--gold);}
+.slider{position:absolute; inset:0; background:#2a415f; border-radius:20px; transition:.2s; cursor:pointer; box-shadow:var(--e-press);}
+.slider:before{content:""; position:absolute; width:20px; height:20px; right:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.4);}
+input:checked + .slider{background:linear-gradient(160deg, var(--gold-2), var(--gold));}
 input:checked + .slider:before{transform:translateX(-20px);}
 
-.result-card{background:linear-gradient(160deg,#152944,#0f2136); border:1px solid var(--gold); border-radius:16px; padding:18px;}
+.result-card{background:linear-gradient(160deg,#1a3050,#0f2136); border:1px solid var(--gold); border-radius:18px; padding:18px; box-shadow:var(--e3);}
 .result-title{font-size:15px; font-weight:700; color:var(--gold-2); margin-bottom:10px;}
 .result-line{display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px dashed #22395a;}
 .result-total{display:flex; justify-content:space-between; font-size:16px; font-weight:800; margin-top:12px; color:var(--gold-2);}
 .share-row{display:flex; gap:10px; margin-top:14px;}
-.share-row button{flex:1; padding:12px; border-radius:12px; border:1px solid var(--gold); background:var(--card-2); color:var(--gold-2); font-size:13px;}
+.share-row button{flex:1; padding:12px; border-radius:12px; border:1px solid var(--gold); background:linear-gradient(160deg, var(--card-2), var(--card)); color:var(--gold-2); font-size:13px; box-shadow:var(--e1); transition:transform .12s ease;}
+.share-row button:active{transform:scale(.96); box-shadow:var(--e-press);}
 
 .data-table{width:100%; border-collapse:collapse; font-size:13px;}
 .data-table th{color:var(--gold-2); font-weight:700; text-align:start; padding:8px 6px; border-bottom:2px solid #223b5c; font-size:12px;}
@@ -204,7 +224,7 @@ input:checked + .slider:before{transform:translateX(-20px);}
 /* modal */
 .modal-bg{position:fixed; inset:0; background:rgba(4,10,20,.6); z-index:200; display:none; align-items:flex-end; justify-content:center;}
 .modal-bg.show{display:flex;}
-.modal{background:var(--bg-2); width:100%; max-width:480px; border-radius:20px 20px 0 0; padding:18px; max-height:85vh; overflow-y:auto;}
+.modal{background:linear-gradient(180deg, var(--bg-2), var(--bg)); width:100%; max-width:480px; border-radius:22px 22px 0 0; padding:18px; max-height:85vh; overflow-y:auto; box-shadow:0 -10px 30px rgba(0,0,0,.5);}
 .modal h3{margin:0 0 12px; font-size:15px;}
 .modal .close-x{float:left; background:none; border:none; color:var(--text-dim); font-size:18px;}
 
@@ -216,6 +236,14 @@ input:checked + .slider:before{transform:translateX(-20px);}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:var(--gold-2)"/>
+      <stop offset="100%" style="stop-color:var(--gold)"/>
+    </linearGradient>
+  </defs>
+</svg>
 <div id="app">
 
   <!-- SPLASH -->
@@ -257,15 +285,28 @@ input:checked + .slider:before{transform:translateX(-20px);}
       <span>Mellal Chem — نسخه ۱۴۰۵۰۵-۱</span>
     </div>
     <div class="grid">
-      <div class="tile" onclick="nav('materials')"><div class="ic">🧪</div><span>مواد اولیه</span></div>
-      <div class="tile" onclick="nav('costs')"><div class="ic">💰</div><span>هزینه‌های تولید</span></div>
-      <div class="tile" onclick="nav('formulas')"><div class="ic">📋</div><span>فرمول‌ها</span></div>
-      <div class="tile" onclick="nav('produce')"><div class="ic">⚗️</div><span>دریافت فرمول تولید</span></div>
-      <div class="tile" onclick="nav('backup')"><div class="ic">☁️</div><span>پشتیبان‌گیری</span></div>
-      <div class="tile" onclick="nav('settings')"><div class="ic">⚙️</div><span>تنظیمات</span></div>
+      <div class="tile" onclick="nav('materials')"><div class="ic">
+        <svg viewBox="0 0 48 48"><path d="M19 6h10 M21 6v10l-9 20a3 3 0 0 0 3 4h18a3 3 0 0 0 3-4l-9-20V6" fill="none" stroke="url(#g1)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M16 30h16" stroke="url(#g1)" stroke-width="2.2" fill="none"/><circle cx="22" cy="35" r="1.6" fill="var(--gold-2)"/><circle cx="27" cy="33" r="1.2" fill="var(--gold-2)"/></svg>
+      </div><span>مواد اولیه</span></div>
+      <div class="tile" onclick="nav('formulas')"><div class="ic">
+        <svg viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="35" rx="4" fill="none" stroke="url(#g1)" stroke-width="2.4"/><rect x="17" y="4" width="14" height="7" rx="2" fill="none" stroke="url(#g1)" stroke-width="2.2"/><path d="M15 20l3 3 5-6 M15 30l3 3 5-6" stroke="var(--gold-2)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 20h6 M27 30h6" stroke="var(--gold-2)" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div><span>فرمول‌ها</span></div>
+      <div class="tile" onclick="nav('costs')"><div class="ic">
+        <svg viewBox="0 0 48 48"><circle cx="16" cy="32" r="7" fill="none" stroke="url(#g1)" stroke-width="2.4"/><circle cx="27" cy="32" r="7" fill="none" stroke="url(#g1)" stroke-width="2.4"/><path d="M9 20L20 10l6 5 12-12" stroke="var(--gold-2)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 3h8v8" stroke="var(--gold-2)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div><span>هزینه‌های تولید</span></div>
+      <div class="tile" onclick="nav('produce')"><div class="ic">
+        <svg viewBox="0 0 48 48"><path d="M18 6h7 M20 6v9l-7 15a2.6 2.6 0 0 0 2.4 3.7H29" fill="none" stroke="url(#g1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="28" y="20" width="14" height="18" rx="2.5" fill="none" stroke="url(#g1)" stroke-width="2.2"/><path d="M31 24h8 M31 29h2.2 M35.8 29h2.2 M31 33.5h2.2 M35.8 33.5h2.2" stroke="var(--gold-2)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div><span>ماشین حساب تولید</span></div>
+      <div class="tile" onclick="nav('settings')"><div class="ic">
+        <svg viewBox="0 0 48 48"><circle cx="20" cy="20" r="6.5" fill="none" stroke="url(#g1)" stroke-width="2.4"/><path d="M20 8v3 M20 29v3 M8 20h3 M29 20h3 M11.5 11.5l2 2 M26.5 26.5l2 2 M11.5 28.5l2-2 M26.5 13.5l2-2" stroke="url(#g1)" stroke-width="2.2" stroke-linecap="round"/><path d="M24 30l12 12 M40 30l-12 12" stroke="var(--gold-2)" stroke-width="2.6" stroke-linecap="round"/></svg>
+      </div><span>تنظیمات</span></div>
+      <div class="tile" onclick="nav('backup')"><div class="ic">
+        <svg viewBox="0 0 48 48"><path d="M14 30a7 7 0 0 1 1-13.9 9.5 9.5 0 0 1 18.4-2A7.5 7.5 0 0 1 34 30H14z" fill="none" stroke="url(#g1)" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 21v13 M19 27l5-5 5 5" stroke="var(--gold-2)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div><span>پشتیبان‌گیری</span></div>
     </div>
     <div class="about-btn" onclick="nav('about')">درباره برنامه</div>
   </div>
+
 
   <!-- MATERIALS -->
   <div class="screen" id="screen-materials">
@@ -342,14 +383,19 @@ input:checked + .slider:before{transform:translateX(-20px);}
   <div class="screen" id="screen-backup">
     <div class="form-box">
       <div class="card-title" style="margin-bottom:8px;">پشتیبان‌گیری</div>
-      <div class="hint">از تمام اطلاعات نرم‌افزار (مواد، هزینه‌ها، فرمول‌ها، تاریخچه و تنظیمات) یک فایل پشتیبان تهیه می‌شود.</div>
-      <button class="fab secondary" onclick="doBackup()">تهیه فایل پشتیبان</button>
+      <div class="hint">از تمام اطلاعات نرم‌افزار (مواد، هزینه‌ها، فرمول‌ها، تاریخچه و تنظیمات) یک پشتیبان تهیه می‌شود.</div>
+      <button class="fab secondary" onclick="doBackup()">تهیه فایل پشتیبان (دانلود)</button>
+      <button class="fab secondary" onclick="showBackupText()">نمایش و کپی متن پشتیبان</button>
+      <div class="hint">اگر دکمه‌ی «دانلود» در گوشی شما کاری انجام نداد (به‌خاطر محدودیت مجوز فایل در این نسخه از برنامه)، از گزینه‌ی «کپی متن» استفاده کنید و متن را در یک یادداشت یا پیام ذخیره کنید.</div>
     </div>
     <div class="form-box">
       <div class="card-title" style="margin-bottom:8px;">بازیابی اطلاعات</div>
-      <div class="hint">با انتخاب فایل پشتیبان، اطلاعات فعلی جایگزین می‌شود.</div>
+      <div class="hint">با انتخاب فایل پشتیبان یا چسباندن متن آن، اطلاعات فعلی جایگزین می‌شود.</div>
       <input type="file" id="restoreFile" accept="application/json" style="margin-top:10px;">
       <button class="fab secondary" onclick="doRestore()">بازیابی از فایل</button>
+      <label style="margin-top:16px;">یا متن فایل پشتیبان را اینجا بچسبانید</label>
+      <textarea id="restoreText" rows="5" placeholder="متن پشتیبان را اینجا Paste کنید..."></textarea>
+      <button class="fab secondary" onclick="doRestoreFromText()">بازیابی از متن</button>
     </div>
   </div>
 
@@ -406,9 +452,9 @@ input:checked + .slider:before{transform:translateX(-20px);}
 
 <div class="bottomnav" id="bottomNav">
   <button class="nb" data-t="home" onclick="nav('home')"><span class="nbicon">🏠</span>خانه</button>
-  <button class="nb" data-t="formulas" onclick="nav('formulas')"><span class="nbicon">📋</span>فرمول‌ها</button>
   <button class="nb" data-t="produce" onclick="nav('produce')"><span class="nbicon">⚗️</span>تولید</button>
   <button class="nb" data-t="settings" onclick="nav('settings')"><span class="nbicon">⚙️</span>تنظیمات</button>
+  <button class="nb" data-t="formulas" onclick="nav('formulas')"><span class="nbicon">📋</span>فرمول‌ها</button>
 </div>
 
 <!-- MATERIAL MODAL -->
@@ -446,6 +492,15 @@ input:checked + .slider:before{transform:translateX(-20px);}
   <label>نام گروه جدید</label>
   <input type="text" id="newGroupName" placeholder="مثلاً ماستیک">
   <button class="fab secondary" onclick="addGroup()">افزودن گروه</button>
+</div></div>
+
+<!-- BACKUP TEXT MODAL -->
+<div class="modal-bg" id="backupTextModalBg"><div class="modal">
+  <button class="close-x" onclick="closeModal('backupTextModalBg')">×</button>
+  <h3>متن پشتیبان</h3>
+  <div class="hint">این متن را کپی کرده و در یک یادداشت، ایمیل یا پیام برای خودتان ذخیره کنید. برای بازیابی، همین متن را در بخش «بازیابی از متن» بچسبانید.</div>
+  <textarea id="backupTextArea" rows="10" readonly style="margin-top:10px; font-size:11px; direction:ltr; text-align:left;"></textarea>
+  <button class="fab secondary" onclick="copyBackupText()">کپی به کلیپ‌بورد</button>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -559,10 +614,13 @@ function bufToBase64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf
 function base64ToBuf(b64){ const bin=atob(b64); const arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i); return arr; }
 
 async function registerFingerprint(){
-  if(!window.PublicKeyCredential){ toast('این دستگاه از اثر انگشت پشتیبانی نمی‌کند'); return false; }
+  if(!window.PublicKeyCredential){
+    toast('پوسته‌ی نصب‌شده‌ی این برنامه از اثر انگشت پشتیبانی نمی‌کند (نیاز به بسته‌بندی TWA دارد)');
+    return false;
+  }
   try{
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-    if(!available){ toast('حسگر اثر انگشت روی این دستگاه در دسترس نیست'); return false; }
+    if(!available){ toast('حسگر اثر انگشت روی این دستگاه/برنامه در دسترس نیست'); return false; }
     const cred = await navigator.credentials.create({publicKey:{
       challenge: crypto.getRandomValues(new Uint8Array(32)),
       rp:{ name:'Mellal Chem' },
@@ -576,7 +634,7 @@ async function registerFingerprint(){
     saveDB('settings');
     toast('اثر انگشت با موفقیت ثبت شد');
     return true;
-  }catch(e){ toast('ثبت اثر انگشت ناموفق بود'); return false; }
+  }catch(e){ toast('ثبت اثر انگشت ناموفق بود: ' + (e.message||'پشتیبانی نمی‌شود')); return false; }
 }
 async function tryFingerprint(){
   if(!window.PublicKeyCredential || !DB.settings.fpCredId){ toast('اثر انگشت ثبت نشده — از تنظیمات وارد کنید'); return; }
@@ -907,8 +965,11 @@ function buildShareText(){
 async function shareAsText(){
   const text=buildShareText();
   if(!text){ toast('ابتدا میزان تولید را وارد کنید'); return; }
-  if(navigator.share){ try{ await navigator.share({title:'Mellal Chem', text}); }catch(e){} }
-  else{ navigator.clipboard.writeText(text); toast('متن در کلیپ‌بورد کپی شد'); }
+  if(navigator.share){
+    try{ await navigator.share({title:'Mellal Chem', text}); return; }catch(e){ if(e.name==='AbortError') return; }
+  }
+  if(navigator.clipboard){ navigator.clipboard.writeText(text); toast('لیست اپ‌های اشتراک‌گذاری در دسترس نیست؛ متن در کلیپ‌بورد کپی شد'); }
+  else{ toast('اشتراک‌گذاری در این نسخه از برنامه پشتیبانی نمی‌شود'); }
 }
 async function shareAsImage(){
   if(!lastProduceResult){ toast('ابتدا میزان تولید را وارد کنید'); return; }
@@ -932,33 +993,63 @@ async function shareAsImage(){
   cv.toBlob(async (blob)=>{
     const file=new File([blob], 'mellal-chem.png', {type:'image/png'});
     if(navigator.canShare && navigator.canShare({files:[file]})){
-      try{ await navigator.share({files:[file], title:'Mellal Chem'}); return; }catch(e){}
+      try{ await navigator.share({files:[file], title:'Mellal Chem'}); return; }catch(e){ if(e.name==='AbortError') return; }
     }
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mellal-chem.png'; a.click();
-    toast('تصویر ذخیره شد');
+    toast('لیست اپ‌های اشتراک‌گذاری در دسترس نیست؛ تصویر در گالری/دانلودها ذخیره شد');
   }, 'image/png');
 }
 
 /* ============ BACKUP / RESTORE ============ */
+function buildBackupData(){
+  return {materials:DB.materials, costs:DB.costs, groups:DB.groups, formulas:DB.formulas, history:DB.history, settings:{...DB.settings}};
+}
 function doBackup(){
-  const data={materials:DB.materials, costs:DB.costs, groups:DB.groups, formulas:DB.formulas, history:DB.history, settings:{...DB.settings}};
+  const data=buildBackupData();
   const blob=new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='mellal-chem-backup-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
-  toast('فایل پشتیبان ذخیره شد');
+  toast('اگر دانلود شروع نشد، از گزینه‌ی «نمایش و کپی متن پشتیبان» استفاده کنید');
+}
+function showBackupText(){
+  const data=buildBackupData();
+  document.getElementById('backupTextArea').value = JSON.stringify(data);
+  document.getElementById('backupTextModalBg').classList.add('show');
+}
+async function copyBackupText(){
+  const ta=document.getElementById('backupTextArea');
+  ta.select();
+  try{
+    if(navigator.clipboard){ await navigator.clipboard.writeText(ta.value); }
+    else{ document.execCommand('copy'); }
+    toast('متن پشتیبان کپی شد');
+  }catch(e){
+    try{ document.execCommand('copy'); toast('متن پشتیبان کپی شد'); }
+    catch(e2){ toast('کپی خودکار ممکن نشد؛ متن را دستی انتخاب و کپی کنید'); }
+  }
+}
+function applyRestoredData(data){
+  DB_KEYS.forEach(k=>{ if(data[k]!==undefined){ DB[k]=data[k]; saveDB(k); } });
+  const ta=document.getElementById('restoreText'); if(ta) ta.value='';
+  const fi=document.getElementById('restoreFile'); if(fi) fi.value='';
+  toast('بازیابی با موفقیت انجام شد');
+  nav('home');
 }
 function doRestore(){
   const inp=document.getElementById('restoreFile');
-  if(!inp.files[0]){ toast('فایل را انتخاب کنید'); return; }
+  if(!inp.files[0]){ toast('فایل را انتخاب کنید یا از «بازیابی از متن» استفاده کنید'); return; }
   const reader=new FileReader();
   reader.onload=(e)=>{
-    try{
-      const data=JSON.parse(e.target.result);
-      DB_KEYS.forEach(k=>{ if(data[k]!==undefined){ DB[k]=data[k]; saveDB(k); } });
-      toast('بازیابی با موفقیت انجام شد'); nav('home');
-    }catch(err){ toast('فایل پشتیبان معتبر نیست'); }
+    try{ applyRestoredData(JSON.parse(e.target.result)); }
+    catch(err){ toast('فایل پشتیبان معتبر نیست'); }
   };
   reader.readAsText(inp.files[0]);
+}
+function doRestoreFromText(){
+  const raw=document.getElementById('restoreText').value.trim();
+  if(!raw){ toast('متن پشتیبان را بچسبانید'); return; }
+  try{ applyRestoredData(JSON.parse(raw)); }
+  catch(err){ toast('متن پشتیبان معتبر نیست'); }
 }
 
 /* ============ SETTINGS / SECURITY ============ */
@@ -968,13 +1059,6 @@ function renderSettings(){
   document.getElementById('secMethod').value = DB.settings.method;
   document.getElementById('fpEnabled').checked = DB.settings.fingerprint;
   renderSecMethod();
-  checkFingerprintSupport();
-}
-async function checkFingerprintSupport(){
-  const row=document.getElementById('fpRow');
-  let supported=false;
-  try{ supported = !!(window.PublicKeyCredential && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }catch(e){}
-  row.style.display = supported ? 'flex' : 'none';
 }
 function toggleSecurity(){
   DB.settings.securityEnabled = document.getElementById('secEnabled').checked;
