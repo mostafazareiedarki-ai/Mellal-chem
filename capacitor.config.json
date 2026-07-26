@@ -2,5 +2,8 @@
   "appId": "com.mellalchem.app",
   "appName": "Mellal Chem",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
 }
