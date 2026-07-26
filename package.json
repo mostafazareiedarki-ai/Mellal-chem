@@ -5,11 +5,9 @@
   "private": true,
   "author": "Mellal Chem",
   "license": "MIT",
-  "scripts": {
-    "build": "echo \"Static web app - no build step required\"",
-    "copy": "npx cap copy",
-    "android": "npx cap open android"
-  },
+ "scripts": {
+  "build": "mkdir -p www && cp index.html www/index.html"
+},
   "dependencies": {
     "@capacitor/android": "^7.6.8",
     "@capacitor/cli": "^7.6.8",
