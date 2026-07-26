@@ -434,15 +434,21 @@ input:checked + .slider:before{transform:translateX(-20px);}
   <div class="screen" id="screen-backup">
     <div class="form-box">
       <div class="card-title" style="margin-bottom:8px;">پشتیبان‌گیری</div>
-      <div class="hint">از تمام اطلاعات نرم‌افزار (مواد، هزینه‌ها، فرمول‌ها، تاریخچه و تنظیمات) یک پشتیبان تهیه می‌شود.</div>
-      <button class="fab secondary" onclick="doBackup()">تهیه فایل پشتیبان (دانلود)</button>
+      <div class="hint">از تمام اطلاعات نرم‌افزار (مواد، هزینه‌ها، فرمول‌ها، تاریخچه و تنظیمات) یک پشتیبان رمزگذاری‌شده (با هش تایید صحت) تهیه می‌شود.</div>
+      <button class="fab secondary" onclick="doBackup()">تهیه فایل پشتیبان (ذخیره در Documents)</button>
       <button class="fab secondary" onclick="showBackupText()">نمایش و کپی متن پشتیبان</button>
-      <div class="hint">اگر دکمه‌ی «دانلود» در گوشی شما کاری انجام نداد (به‌خاطر محدودیت مجوز فایل در این نسخه از برنامه)، از گزینه‌ی «کپی متن» استفاده کنید و متن را در یک یادداشت یا پیام ذخیره کنید.</div>
+      <div class="hint">در نسخه‌ی نصبی گوشی، فایل مستقیم در پوشه‌ی Documents ذخیره می‌شود. اگر ذخیره ناموفق بود، از گزینه‌ی «کپی متن» استفاده کنید.</div>
     </div>
     <div class="form-box">
-      <div class="card-title" style="margin-bottom:8px;">بازیابی اطلاعات</div>
+      <div class="card-title" style="margin-bottom:8px;">بازیابی از حافظه گوشی</div>
+      <div class="hint">فایل‌های پشتیبان ذخیره‌شده در Documents گوشی:</div>
+      <div id="backupFileList" style="margin-top:8px;"></div>
+      <button class="fab secondary" onclick="listBackupFiles()">به‌روزرسانی لیست</button>
+    </div>
+    <div class="form-box">
+      <div class="card-title" style="margin-bottom:8px;">بازیابی از فایل یا متن</div>
       <div class="hint">با انتخاب فایل پشتیبان یا چسباندن متن آن، اطلاعات فعلی جایگزین می‌شود.</div>
-      <input type="file" id="restoreFile" accept="application/json" style="margin-top:10px;">
+      <input type="file" id="restoreFile" accept=".mcb,.json,text/plain,application/json" style="margin-top:10px;">
       <button class="fab secondary" onclick="doRestore()">بازیابی از فایل</button>
       <label style="margin-top:16px;">یا متن فایل پشتیبان را اینجا بچسبانید</label>
       <textarea id="restoreText" rows="5" placeholder="متن پشتیبان را اینجا Paste کنید..."></textarea>
@@ -808,6 +814,7 @@ function nav(name, isHome){
   if(name==='formulas') renderFormulas();
   if(name==='produce') renderProduceScreen();
   if(name==='settings') renderSettings();
+  if(name==='backup') listBackupFiles();
   window.scrollTo(0,0);
 }
 function goHome(){ nav('home'); }
@@ -1161,20 +1168,48 @@ function downloadImageNow(){
 function buildBackupData(){
   return {materials:DB.materials, costs:DB.costs, groups:DB.groups, formulas:DB.formulas, history:DB.history, settings:{...DB.settings}};
 }
+function isCapacitorFS(){
+  return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem);
+}
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function b64EncodeUnicode(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64DecodeUnicode(str){ return decodeURIComponent(escape(atob(str))); }
+
+// Builds the encoded+hashed backup file content: base64( {v, hash(sha256 of raw json), data: base64(raw json)} )
+async function buildBackupFileContent(){
+  const rawJson = JSON.stringify(buildBackupData());
+  const hash = await sha256Hex(rawJson);
+  const payload = { v:1, hash, data: b64EncodeUnicode(rawJson) };
+  return b64EncodeUnicode(JSON.stringify(payload));
+}
+
 async function doBackup(){
-  const data=buildBackupData();
-  const filename='mellal-chem-backup-'+new Date().toISOString().slice(0,10)+'.json';
-  const blob=new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-  const file=new File([blob], filename, {type:'application/json'});
+  const fileContent = await buildBackupFileContent();
+  const filename='mellal-chem-backup-'+new Date().toISOString().slice(0,10)+'.mcb';
+
+  if(isCapacitorFS()){
+    try{
+      const { Filesystem } = Capacitor.Plugins;
+      await Filesystem.writeFile({ path: filename, data: fileContent, directory: 'DOCUMENTS' });
+      toast('فایل پشتیبان رمزگذاری‌شده در پوشه Documents ذخیره شد: '+filename);
+      return;
+    }catch(e){ toast('ذخیره در حافظه گوشی ناموفق بود؛ روش دیگری امتحان می‌شود'); }
+  }
+  // Browser / non-native fallback
+  const blob=new Blob([fileContent], {type:'text/plain'});
+  const file=new File([blob], filename, {type:'text/plain'});
   if(navigator.canShare && navigator.canShare({files:[file]})){
     try{ await navigator.share({files:[file], title:'Mellal Chem Backup'}); return; }catch(e){ if(e.name==='AbortError') return; }
   }
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
   toast('اگر فایلی ذخیره نشد، از گزینه‌ی «نمایش و کپی متن پشتیبان» استفاده کنید');
 }
-function showBackupText(){
-  const data=buildBackupData();
-  document.getElementById('backupTextArea').value = JSON.stringify(data);
+
+async function showBackupText(){
+  document.getElementById('backupTextArea').value = await buildBackupFileContent();
   document.getElementById('backupTextModalBg').classList.add('show');
 }
 async function copyBackupText(){
@@ -1189,6 +1224,44 @@ async function copyBackupText(){
     catch(e2){ toast('کپی خودکار ممکن نشد؛ متن را دستی انتخاب و کپی کنید'); }
   }
 }
+
+// Lists .mcb backup files saved in the phone's Documents folder (native only)
+async function listBackupFiles(){
+  const box=document.getElementById('backupFileList');
+  if(!isCapacitorFS()){ box.innerHTML='<div class="hint">این قابلیت فقط در نسخه‌ی نصبی روی گوشی در دسترس است.</div>'; return; }
+  try{
+    const { Filesystem } = Capacitor.Plugins;
+    const res = await Filesystem.readdir({ path:'', directory:'DOCUMENTS' });
+    const files = (res.files||[]).map(f=>typeof f==='string'?f:f.name).filter(n=>n && n.startsWith('mellal-chem-backup-') && n.endsWith('.mcb')).sort().reverse();
+    if(!files.length){ box.innerHTML='<div class="hint">فایل پشتیبانی در Documents پیدا نشد.</div>'; return; }
+    box.innerHTML = files.map(f=>`
+      <div class="matline"><div class="mname">${f}</div><button class="icon-btn edit" onclick="restoreFromFilesystem('${f}')">بازیابی</button></div>`).join('');
+  }catch(e){ box.innerHTML='<div class="hint">خواندن لیست فایل‌ها ناموفق بود.</div>'; }
+}
+async function restoreFromFilesystem(filename){
+  try{
+    const { Filesystem } = Capacitor.Plugins;
+    const res = await Filesystem.readFile({ path: filename, directory:'DOCUMENTS' });
+    await restoreFromRawFileText(res.data);
+  }catch(e){ toast('خواندن فایل پشتیبان ناموفق بود'); }
+}
+
+// Verifies the hash and applies the backup; falls back to older plain-JSON backups for compatibility
+async function restoreFromRawFileText(text){
+  try{
+    const payload = JSON.parse(b64DecodeUnicode(text));
+    if(payload && payload.data && payload.hash){
+      const rawJson = b64DecodeUnicode(payload.data);
+      const checkHash = await sha256Hex(rawJson);
+      if(checkHash !== payload.hash){ toast('فایل پشتیبان دستکاری یا خراب شده است'); return; }
+      applyRestoredData(JSON.parse(rawJson));
+      return;
+    }
+  }catch(e){ /* not the new encoded format — fall through to legacy plain JSON */ }
+  try{ applyRestoredData(JSON.parse(text)); }
+  catch(err){ toast('فایل پشتیبان معتبر نیست'); }
+}
+
 function applyRestoredData(data){
   DB_KEYS.forEach(k=>{ if(data[k]!==undefined){ DB[k]=data[k]; saveDB(k); } });
   const ta=document.getElementById('restoreText'); if(ta) ta.value='';
@@ -1200,17 +1273,13 @@ function doRestore(){
   const inp=document.getElementById('restoreFile');
   if(!inp.files[0]){ toast('فایل را انتخاب کنید یا از «بازیابی از متن» استفاده کنید'); return; }
   const reader=new FileReader();
-  reader.onload=(e)=>{
-    try{ applyRestoredData(JSON.parse(e.target.result)); }
-    catch(err){ toast('فایل پشتیبان معتبر نیست'); }
-  };
+  reader.onload=(e)=>{ restoreFromRawFileText(e.target.result); };
   reader.readAsText(inp.files[0]);
 }
 function doRestoreFromText(){
   const raw=document.getElementById('restoreText').value.trim();
   if(!raw){ toast('متن پشتیبان را بچسبانید'); return; }
-  try{ applyRestoredData(JSON.parse(raw)); }
-  catch(err){ toast('متن پشتیبان معتبر نیست'); }
+  restoreFromRawFileText(raw);
 }
 
 /* ============ SETTINGS / SECURITY ============ */
