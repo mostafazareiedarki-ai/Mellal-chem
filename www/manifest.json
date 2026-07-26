@@ -1,6 +1,6 @@
 {
-  "name": "Mellal Chem - محاسبات تولید ملل",
-  "short_name": "Mellal Chem",
+  "name": "مدیریت فرمول ملل",
+  "short_name": "مدیریت فرمول ملل",
   "start_url": "./index.html",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone", "minimal-ui"],

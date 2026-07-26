@@ -1,6 +1,6 @@
 {
   "appId": "com.mellalchem.app",
-  "appName": "Mellal Chem",
+  "appName": "مدیریت فرمول ملل",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {
